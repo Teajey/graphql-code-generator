@@ -1,13 +1,5 @@
 import { Types, PluginValidateFn, PluginFunction } from '@graphql-codegen/plugin-helpers';
-import {
-  GraphQLSchema,
-  isInterfaceType,
-  isObjectType,
-  isScalarType,
-  isNonNullType,
-  getNamedType,
-  isNullableType,
-} from 'graphql';
+import { GraphQLSchema, isInterfaceType, isObjectType, isScalarType, getNamedType, isNullableType } from 'graphql';
 import { extname } from 'path';
 import { ApolloClientHelpersConfig } from './config.js';
 
