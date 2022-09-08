@@ -71,3 +71,53 @@ export type StrictTypedTypePolicies = {
 };
 export type TypedTypePolicies = StrictTypedTypePolicies & TypePolicies;"
 `;
+
+exports[`apollo-client-helpers Should output typePolicies object with useTypescriptPluginTypes: true 1`] = `
+"import { FieldPolicy, FieldReadFunction, TypePolicies, TypePolicy } from '@apollo/client/cache';
+export type QueryKeySpecifier = ('user' | QueryKeySpecifier)[];
+export type QueryFieldPolicy = {
+	user?: FieldPolicy<User> | FieldReadFunction<User>
+};
+export type UserKeySpecifier = ('id' | 'name' | 'address' | UserKeySpecifier)[];
+export type UserFieldPolicy = {
+	id?: FieldPolicy<Scalar["ID"]> | FieldReadFunction<Scalar["ID"]>,
+	name?: FieldPolicy<Scalar["String"]> | FieldReadFunction<Scalar["String"]>,
+	address?: FieldPolicy<Scalar["String"] | undefined> | FieldReadFunction<Scalar["String"] | undefined>
+};
+export type StrictTypedTypePolicies = {
+	Query?: Omit<TypePolicy, "fields" | "keyFields"> & {
+		keyFields?: false | QueryKeySpecifier | (() => undefined | QueryKeySpecifier),
+		fields?: QueryFieldPolicy,
+	},
+	User?: Omit<TypePolicy, "fields" | "keyFields"> & {
+		keyFields?: false | UserKeySpecifier | (() => undefined | UserKeySpecifier),
+		fields?: UserFieldPolicy,
+	}
+};
+export type TypedTypePolicies = StrictTypedTypePolicies & TypePolicies;"
+`;
+
+exports[`apollo-client-helpers Should output typePolicies object with useTypescriptTypes: true 1`] = `
+"import { FieldPolicy, FieldReadFunction, TypePolicies, TypePolicy } from '@apollo/client/cache';
+export type QueryKeySpecifier = ('user' | QueryKeySpecifier)[];
+export type QueryFieldPolicy = {
+	user?: FieldPolicy<User> | FieldReadFunction<User>
+};
+export type UserKeySpecifier = ('id' | 'name' | 'address' | UserKeySpecifier)[];
+export type UserFieldPolicy = {
+	id?: FieldPolicy<Scalar["ID"]> | FieldReadFunction<Scalar["ID"]>,
+	name?: FieldPolicy<Scalar["String"]> | FieldReadFunction<Scalar["String"]>,
+	address?: FieldPolicy<Scalar["String"] | undefined> | FieldReadFunction<Scalar["String"] | undefined>
+};
+export type StrictTypedTypePolicies = {
+	Query?: Omit<TypePolicy, "fields" | "keyFields"> & {
+		keyFields?: false | QueryKeySpecifier | (() => undefined | QueryKeySpecifier),
+		fields?: QueryFieldPolicy,
+	},
+	User?: Omit<TypePolicy, "fields" | "keyFields"> & {
+		keyFields?: false | UserKeySpecifier | (() => undefined | UserKeySpecifier),
+		fields?: UserFieldPolicy,
+	}
+};
+export type TypedTypePolicies = StrictTypedTypePolicies & TypePolicies;"
+`;

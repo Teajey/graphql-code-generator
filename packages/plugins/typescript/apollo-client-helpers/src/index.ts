@@ -1,5 +1,13 @@
 import { Types, PluginValidateFn, PluginFunction } from '@graphql-codegen/plugin-helpers';
-import { GraphQLSchema, isInterfaceType, isObjectType } from 'graphql';
+import {
+  GraphQLSchema,
+  isInterfaceType,
+  isObjectType,
+  isScalarType,
+  isNonNullType,
+  getNamedType,
+  isNullableType,
+} from 'graphql';
 import { extname } from 'path';
 import { ApolloClientHelpersConfig } from './config.js';
 
@@ -29,18 +37,35 @@ function generateTypePoliciesSignature(
     const type = typeMap[typeName];
 
     if (!typeName.startsWith('__') && (isObjectType(type) || isInterfaceType(type))) {
-      const fieldsNames = Object.keys(type.getFields()).filter(f => !f.startsWith('__'));
+      const fields = Object.entries(type.getFields()).filter(([f]) => !f.startsWith('__'));
       const keySpecifierVarName = `${typeName}KeySpecifier`;
       const fieldPolicyVarName = `${typeName}FieldPolicy`;
 
       perTypePolicies.push(
-        `export type ${keySpecifierVarName} = (${fieldsNames
-          .map(f => `'${f}'`)
+        `export type ${keySpecifierVarName} = (${fields
+          .map(([f]) => `'${f}'`)
           .join(' | ')} | ${keySpecifierVarName})[];`
       );
 
       perTypePolicies.push(`export type ${fieldPolicyVarName} = {
-${fieldsNames.map(fieldName => `\t${fieldName}?: FieldPolicy<any> | FieldReadFunction<any>`).join(',\n')}
+${fields
+  .map(([fieldName, { type: fieldType }]) => {
+    let fieldTypeString: string;
+    if (config.useTypescriptPluginTypes) {
+      const fieldNamedType = getNamedType(fieldType);
+      fieldTypeString = fieldNamedType.toString();
+      if (isScalarType(fieldNamedType)) {
+        fieldTypeString = `Scalar["${fieldTypeString}"]`;
+      }
+      if (isNullableType(fieldType)) {
+        fieldTypeString += ' | undefined';
+      }
+    } else {
+      fieldTypeString = 'any';
+    }
+    return `\t${fieldName}?: FieldPolicy<${fieldTypeString}> | FieldReadFunction<${fieldTypeString}>`;
+  })
+  .join(',\n')}
 };`);
 
       return {
