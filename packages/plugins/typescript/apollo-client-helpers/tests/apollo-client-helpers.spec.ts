@@ -56,4 +56,28 @@ describe('apollo-client-helpers', () => {
     expect(result).toContain(`Query?:`);
     expect(result).toMatchSnapshot();
   });
+
+  it('Should output typePolicies object with useTypescriptPluginTypes: true', async () => {
+    const schema = buildSchema(/* GraphQL */ `
+      type Query {
+        user: User!
+      }
+      type User {
+        id: ID!
+        name: String!
+        address: String
+      }
+    `);
+    const result = mergeOutputs([
+      await plugin(schema, [], {
+        useTypescriptPluginTypes: true,
+      }),
+    ]);
+    expect(result).toContain(`User?:`);
+    expect(result).toContain(`Query?:`);
+    expect(result).toContain(`<User>`);
+    expect(result).toContain(`<Scalar["ID"]>`);
+    expect(result).toContain(`<Scalar["String"]>`);
+    expect(result).toMatchSnapshot();
+  });
 });

@@ -1,5 +1,6 @@
 {
   "name": "graphql-code-generator",
+  "version": "0.0.0",
   "private": true,
   "scripts": {
     "postinstall": "patch-package && husky install",
